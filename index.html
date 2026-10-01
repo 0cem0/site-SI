@@ -1,526 +1,584 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ma carte pour enfants</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Minirue – Votre rue en tapis de jeu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F6F8; --surface:#FFFFFF; --ink:#17212F; --muted:#5C6676; --line:#E1E5EB;
+  --btn-bg:#17212F; --btn-fg:#FFFFFF; --accent:#FFC233; --road:#4A5468; --danger:#B3261E; --ok:#1E7B4B;
+  --shadow:0 1px 2px rgba(23,33,47,.06), 0 12px 32px -12px rgba(23,33,47,.18);
+  --font-head:'Bricolage Grotesque','Avenir Next','Segoe UI',system-ui,sans-serif;
+  --font-body:'DM Sans','Avenir Next','Segoe UI',system-ui,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F141C; --surface:#171E29; --ink:#EEF1F5; --muted:#9BA6B5; --line:#283142;
+    --btn-bg:#EEF1F5; --btn-fg:#0F141C; --danger:#FF8A80; --ok:#6FD79B;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 32px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F141C; --surface:#171E29; --ink:#EEF1F5; --muted:#9BA6B5; --line:#283142;
+  --btn-bg:#EEF1F5; --btn-fg:#0F141C; --danger:#FF8A80; --ok:#6FD79B;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 32px -12px rgba(0,0,0,.6);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--font-head);margin:0;letter-spacing:-.02em;line-height:1.1}
+p{margin:0}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+/* Header */
+header.top{display:flex;align-items:center;justify-content:space-between;height:76px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--font-head);font-weight:800;font-size:22px;letter-spacing:-.02em;text-decoration:none;color:var(--ink)}
+.logo svg{display:block}
+nav.links{display:flex;gap:28px;font-size:15px}
+nav.links a{color:var(--muted);text-decoration:none}
+nav.links a:hover{color:var(--ink)}
 
-    body {
-      margin: 0;
-      font-family: "Comic Sans MS", "Trebuchet MS", sans-serif;
-      background: #fff8e8;
-      color: #333;
-    }
+/* Hero */
+.hero{padding:28px 0 36px}
+.hero h1{font-size:clamp(2.5rem,5.6vw,4.25rem);font-weight:800;max-width:15ch}
+.hero p.lead{margin-top:18px;font-size:1.15rem;color:var(--muted);max-width:56ch}
 
-    header {
-      background: #ffcf5c;
-      padding: 18px 25px;
-      text-align: center;
-      border-bottom: 5px solid #f2a93b;
-    }
+/* Studio */
+.studio{display:grid;grid-template-columns:400px minmax(0,1fr);gap:28px;align-items:start;padding-bottom:72px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:24px;display:flex;flex-direction:column;gap:24px}
+.panel h2{font-size:1.05rem;font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+.drop{display:flex;flex-direction:column;gap:6px;align-items:flex-start;width:100%;text-align:left;background:var(--bg);border:1.5px dashed var(--line);border-radius:14px;padding:18px;cursor:pointer;transition:border-color .15s, background .15s}
+.drop:hover,.drop.over{border-color:var(--road);background:color-mix(in srgb,var(--accent) 14%,var(--bg))}
+.drop strong{font-weight:600}
+.drop span{color:var(--muted);font-size:.9rem}
+.status{margin-top:10px;font-size:.88rem;color:var(--muted);display:flex;gap:8px;align-items:center;min-height:22px}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block;flex:none}
+.sample-link{background:none;border:0;padding:0;color:var(--ink);text-decoration:underline;cursor:pointer;font-size:.88rem}
 
-    header h1 {
-      margin: 0;
-      font-size: 30px;
-      color: #5d4327;
-    }
+.opts{display:grid;gap:8px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.opt label{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;transition:border-color .15s, background .15s}
+.opt label small{display:block;color:var(--muted);font-size:.82rem}
+.opt label b{font-weight:600}
+.opt .p{font-weight:600;white-space:nowrap}
+.opt input:checked + label{border-color:var(--ink);background:color-mix(in srgb,var(--accent) 16%,var(--surface))}
+.opt input:focus-visible + label{outline:3px solid var(--accent);outline-offset:2px}
 
-    header p {
-      margin: 5px 0 0;
-      color: #73552f;
-    }
+.summary{border-top:1px solid var(--line);padding-top:18px;display:flex;flex-direction:column;gap:6px;font-size:.95rem}
+.summary .row{display:flex;justify-content:space-between;color:var(--muted)}
+.summary .total{display:flex;justify-content:space-between;align-items:baseline;color:var(--ink);font-family:var(--font-head);font-weight:700;font-size:1.5rem;margin-top:6px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:var(--btn-bg);color:var(--btn-fg);border:0;border-radius:12px;padding:14px 20px;font-weight:600;cursor:pointer;width:100%;transition:transform .1s, opacity .15s}
+.btn:hover{opacity:.92}
+.btn:active{transform:translateY(1px)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.fine{font-size:.82rem;color:var(--muted);text-align:center}
 
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 15px;
-      background: white;
-      box-shadow: 0 2px 10px rgba(0,0,0,.08);
-      align-items: center;
-    }
+/* Stage */
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:14px}
+.compare{position:relative;aspect-ratio:3/2;border-radius:12px;overflow:hidden;background:var(--bg);--pos:50%;touch-action:pan-y}
+.compare canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#origC{clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
+.handle{position:absolute;top:0;bottom:0;left:var(--pos);width:3px;margin-left:-1.5px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.18);pointer-events:none}
+.handle::after{content:"";position:absolute;top:50%;left:50%;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;background:var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.3);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cpath d='M18 15l-7 7 7 7M26 15l7 7-7 7' fill='none' stroke='%2317212F' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.compare input[type=range]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+.tag{position:absolute;bottom:12px;padding:5px 11px;border-radius:999px;background:rgba(23,33,47,.82);color:#fff;font-size:.8rem;font-weight:600;pointer-events:none}
+.tag.l{left:12px}.tag.r{right:12px}
+.busy{position:absolute;inset:0;background:color-mix(in srgb,var(--surface) 86%,transparent);backdrop-filter:blur(4px);display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px}
+.busy.on{display:flex}
+.busy p{font-family:var(--font-head);font-weight:700;font-size:1.25rem}
+.busy small{color:var(--muted)}
+.bar{width:min(320px,70%);height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent)}
+.stage-foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:14px 6px 4px;color:var(--muted);font-size:.9rem}
 
-    .toolbar input {
-      flex: 1;
-      min-width: 220px;
-      padding: 12px 15px;
-      border: 3px solid #ffd166;
-      border-radius: 15px;
-      font-size: 16px;
-      outline: none;
-    }
+/* How */
+.how{border-top:1px solid var(--line);padding:56px 0 24px}
+.how h2{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;margin-bottom:28px}
+.how ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.how li{display:grid;gap:8px}
+.how li b{font-family:var(--font-head);font-size:2.2rem;font-weight:800;color:var(--road);line-height:1}
+.how li h3{font-size:1.15rem}
+.how li p{color:var(--muted);max-width:36ch}
+footer{padding:28px 0 56px;color:var(--muted);font-size:.88rem;border-top:1px solid var(--line);margin-top:32px}
 
-    button {
-      border: 0;
-      border-radius: 14px;
-      padding: 12px 16px;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-      background: #ff8fab;
-      color: white;
-      box-shadow: 0 3px 0 #d96882;
-      transition: transform .1s;
-    }
+/* Checkout */
+dialog{border:0;padding:0;border-radius:20px;background:var(--surface);color:var(--ink);width:min(940px,calc(100vw - 24px));max-height:calc(100dvh - 24px);box-shadow:0 30px 80px rgba(0,0,0,.4)}
+dialog::backdrop{background:rgba(10,14,20,.6)}
+.co{display:grid;grid-template-columns:minmax(0,1fr) 340px}
+.co-main{padding:30px;display:flex;flex-direction:column;gap:18px}
+.co-side{padding:30px;background:var(--bg);border-left:1px solid var(--line);display:flex;flex-direction:column;gap:16px}
+.co-side img{width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:12px;display:block}
+.co h2{font-size:1.6rem;font-weight:800}
+.demo{background:color-mix(in srgb,var(--accent) 22%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 60%,var(--line));border-radius:12px;padding:12px 14px;font-size:.9rem;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.demo button{background:none;border:0;padding:0;text-decoration:underline;font-weight:600;cursor:pointer}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field.full{grid-column:1/-1}
+.field label{font-size:.88rem;font-weight:600}
+.field input{border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:11px 12px;width:100%}
+.field input:focus{border-color:var(--ink);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 60%,transparent)}
+.field.bad input{border-color:var(--danger)}
+.field .err{color:var(--danger);font-size:.82rem;min-height:0;display:none}
+.field.bad .err{display:block}
+.group-title{font-family:var(--font-head);font-weight:700;font-size:1.05rem;margin-top:6px}
+.close{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;border:0;background:var(--bg);cursor:pointer;font-size:20px;line-height:1}
+dialog{position:fixed;overflow:auto}
+.done{padding:44px 36px;display:flex;flex-direction:column;gap:18px;align-items:flex-start}
+.done .check{width:56px;height:56px;border-radius:50%;background:var(--ok);display:grid;place-items:center}
+.done img{width:100%;max-width:440px;border-radius:14px;display:block}
+.done dl{display:grid;grid-template-columns:auto 1fr;gap:6px 24px;margin:0}
+.done dt{color:var(--muted)}.done dd{margin:0;font-weight:600}
+.spin{width:18px;height:18px;border-radius:50%;border:3px solid currentColor;border-right-color:transparent;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
 
-    button:hover {
-      transform: translateY(-2px);
-    }
-
-    button:active {
-      transform: translateY(1px);
-      box-shadow: 0 1px 0 #d96882;
-    }
-
-    .blue {
-      background: #64b5f6;
-      box-shadow: 0 3px 0 #368aca;
-    }
-
-    .green {
-      background: #81c784;
-      box-shadow: 0 3px 0 #55a45a;
-    }
-
-    .purple {
-      background: #ba8cff;
-      box-shadow: 0 3px 0 #875bd1;
-    }
-
-    .orange {
-      background: #ffab5c;
-      box-shadow: 0 3px 0 #db7c27;
-    }
-
-    #map-container {
-      position: relative;
-      width: 100%;
-      height: calc(100vh - 155px);
-      min-height: 500px;
-    }
-
-    #map {
-      width: 100%;
-      height: 100%;
-    }
-
-    .legend {
-      position: absolute;
-      left: 20px;
-      bottom: 20px;
-      background: rgba(255,255,255,.94);
-      padding: 12px 16px;
-      border-radius: 15px;
-      box-shadow: 0 3px 15px rgba(0,0,0,.15);
-      font-size: 14px;
-    }
-
-    .legend div {
-      margin: 5px 0;
-    }
-
-    .road {
-      display: inline-block;
-      width: 25px;
-      height: 8px;
-      background: #fff;
-      border: 2px solid #e0a83a;
-      border-radius: 5px;
-      margin-right: 6px;
-    }
-
-    .park {
-      display: inline-block;
-      width: 20px;
-      height: 14px;
-      background: #9bd88d;
-      border-radius: 5px;
-      margin-right: 6px;
-    }
-
-    .water {
-      display: inline-block;
-      width: 20px;
-      height: 14px;
-      background: #82cfff;
-      border-radius: 5px;
-      margin-right: 6px;
-    }
-
-    .marker-panel {
-      position: absolute;
-      right: 20px;
-      top: 20px;
-      background: rgba(255,255,255,.96);
-      padding: 15px;
-      border-radius: 18px;
-      box-shadow: 0 3px 15px rgba(0,0,0,.15);
-      width: 210px;
-    }
-
-    .marker-panel h3 {
-      margin: 0 0 10px;
-      font-size: 17px;
-    }
-
-    .marker-panel select {
-      width: 100%;
-      padding: 9px;
-      border-radius: 10px;
-      border: 2px solid #ddd;
-      margin-bottom: 8px;
-    }
-
-    .marker-panel button {
-      width: 100%;
-    }
-
-    @media print {
-      header,
-      .toolbar,
-      .legend,
-      .marker-panel {
-        display: none;
-      }
-
-      #map-container,
-      #map {
-        height: 100vh;
-      }
-    }
-  </style>
+@media (max-width:980px){
+  .studio{grid-template-columns:1fr}
+  .stage{order:-1}
+  .how ol{grid-template-columns:1fr;gap:24px}
+  .co{grid-template-columns:1fr}
+  .co-side{border-left:0;border-top:1px solid var(--line);order:-1}
+  nav.links{display:none}
+}
+@media (max-width:520px){
+  .wrap{padding:0 16px}
+  .grid2{grid-template-columns:1fr}
+  .co-main,.co-side{padding:22px}
+}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
 </head>
-
 <body>
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="#" aria-label="Minirue, accueil">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="8" fill="#4A5468"/><path d="M15 3v24" stroke="#FFC233" stroke-width="2.4" stroke-dasharray="4 3.4"/><rect x="3" y="3" width="7" height="9" rx="2" fill="#7FC66B"/><rect x="20" y="17" width="7" height="10" rx="2" fill="#F4978E"/></svg>
+      Minirue
+    </a>
+    <nav class="links" aria-label="Navigation">
+      <a href="#how">Comment ça marche</a>
+      <a href="#studio">Créer mon tapis</a>
+    </nav>
+  </header>
 
-<header>
-  <h1>🗺️ Ma super carte pour enfants 🌈</h1>
-  <p>Explore une ville et transforme-la en carte colorée et amusante !</p>
-</header>
+  <section class="hero">
+    <h1>Votre rue, en tapis de jeu.</h1>
+    <p class="lead">Importez une capture d'écran de Google Maps. Minirue la transforme en tapis pour les voitures, les trains et les petits personnages de vos enfants.</p>
+  </section>
 
-<div class="toolbar">
+  <main>
+  <section class="studio" id="studio">
+    <div class="panel">
+      <div>
+        <h2>Votre capture d'écran</h2>
+        <button class="drop" id="drop" type="button">
+          <strong>Déposez une capture de Google Maps</strong>
+          <span>ou cliquez pour choisir un fichier. Vous pouvez aussi la coller avec Ctrl+V.</span>
+        </button>
+        <input id="file" type="file" accept="image/*" hidden>
+        <div class="status" id="status" aria-live="polite"><i></i><span>Exemple affiché.</span></div>
+      </div>
 
-  <input
-    id="address"
-    type="text"
-    placeholder="🔎 Entre une ville ou une adresse..."
-  >
+      <div>
+        <h2>Taille du tapis</h2>
+        <div class="opts" id="sizes"></div>
+      </div>
 
-  <button class="blue" onclick="searchPlace()">
-    🔎 Rechercher
-  </button>
+      <div>
+        <h2>Matière</h2>
+        <div class="opts" id="mats"></div>
+      </div>
 
-  <button class="green" onclick="zoomIn()">
-    ➕ Zoom
-  </button>
+      <div>
+        <div class="summary">
+          <div class="row"><span id="sumSize"></span><span id="sumSizeP"></span></div>
+          <div class="row"><span id="sumMat"></span><span id="sumMatP"></span></div>
+          <div class="row"><span>Livraison</span><span>Offerte</span></div>
+          <div class="total"><span>Total</span><span id="total"></span></div>
+        </div>
+        <button class="btn" id="order" type="button" style="margin-top:16px">Commander ce tapis</button>
+        <p class="fine" style="margin-top:10px">Livré en 5 à 7 jours ouvrés. Satisfait ou remboursé 30 jours.</p>
+      </div>
+    </div>
 
-  <button class="orange" onclick="zoomOut()">
-    ➖ Dézoom
-  </button>
+    <div class="stage">
+      <div class="compare" id="compare">
+        <canvas id="matC" aria-label="Aperçu du tapis de jeu"></canvas>
+        <canvas id="origC" aria-label="Capture d'écran d'origine"></canvas>
+        <div class="handle"></div>
+        <span class="tag l">Capture</span><span class="tag r">Tapis</span>
+        <input id="slider" type="range" min="0" max="100" value="50" aria-label="Comparer la capture et le tapis">
+        <div class="busy" id="busy" role="status">
+          <p>Création de votre tapis</p>
+          <div class="bar"><i id="barI"></i></div>
+          <small id="busyTxt">Analyse des rues</small>
+        </div>
+      </div>
+      <div class="stage-foot">
+        <span>Faites glisser pour comparer la capture et le tapis.</span>
+        <span>Aperçu : environ 3 mm de bordure cousue.</span>
+      </div>
+    </div>
+  </section>
 
-  <button class="purple" onclick="printMap()">
-    🖨️ Imprimer
-  </button>
+  <section class="how" id="how">
+    <h2>Trois étapes, un tapis à votre adresse</h2>
+    <ol>
+      <li><b>1</b><h3>Capturez votre rue</h3><p>Ouvrez Google Maps en vue plan, cadrez le quartier de votre choix et prenez une capture d'écran.</p></li>
+      <li><b>2</b><h3>Admirez l'aperçu</h3><p>Routes, parcs, rivières et maisons sont redessinés en couleurs franches, adaptées aux petites voitures.</p></li>
+      <li><b>3</b><h3>Recevez votre tapis</h3><p>Choisissez la taille et la matière, payez en ligne. Le tapis est imprimé et livré chez vous.</p></li>
+    </ol>
+  </section>
+  </main>
 
-  <button onclick="resetMap()">
-    🏠 Recentrer
-  </button>
-
+  <footer>
+    Démonstration : la transformation est simulée dans votre navigateur et le paiement est factice. Aucune image ni donnée n'est envoyée.
+  </footer>
 </div>
 
-<div id="map-container">
+<dialog id="dlg" aria-labelledby="coTitle">
+  <button class="close" id="dlgClose" type="button" aria-label="Fermer">×</button>
+  <div id="coForm" class="co">
+    <div class="co-main">
+      <h2 id="coTitle">Finaliser la commande</h2>
+      <div class="demo"><span>Mode démonstration : aucun paiement réel. N'entrez pas votre vraie carte.</span><button type="button" id="fillTest">Remplir avec des données de test</button></div>
 
-  <div id="map"></div>
+      <div class="group-title">Livraison</div>
+      <div class="grid2">
+        <div class="field full"><label for="fName">Nom complet</label><input id="fName" autocomplete="name"><span class="err"></span></div>
+        <div class="field full"><label for="fMail">Adresse e-mail</label><input id="fMail" type="email" autocomplete="email"><span class="err"></span></div>
+        <div class="field full"><label for="fAddr">Adresse</label><input id="fAddr" autocomplete="street-address"><span class="err"></span></div>
+        <div class="field"><label for="fZip">Code postal</label><input id="fZip" inputmode="numeric" autocomplete="postal-code"><span class="err"></span></div>
+        <div class="field"><label for="fCity">Ville</label><input id="fCity" autocomplete="address-level2"><span class="err"></span></div>
+      </div>
 
-  <div class="marker-panel">
-    <h3>⭐ Ajouter un endroit</h3>
-
-    <select id="markerType">
-      <option value="🏠">🏠 Maison</option>
-      <option value="🏫">🏫 École</option>
-      <option value="🌳">🌳 Parc</option>
-      <option value="🏰">🏰 Château</option>
-      <option value="🍦">🍦 Glace</option>
-      <option value="🐻">🐻 Animal</option>
-      <option value="⭐">⭐ Trésor</option>
-    </select>
-
-    <button onclick="activateMarkerMode()">
-      📍 Placer sur la carte
-    </button>
+      <div class="group-title">Paiement par carte</div>
+      <div class="grid2">
+        <div class="field full"><label for="fCard">Numéro de carte</label><input id="fCard" inputmode="numeric" autocomplete="off" placeholder="1234 5678 9012 3456"><span class="err"></span></div>
+        <div class="field"><label for="fExp">Expiration</label><input id="fExp" inputmode="numeric" autocomplete="off" placeholder="MM/AA"><span class="err"></span></div>
+        <div class="field"><label for="fCvc">Code de sécurité</label><input id="fCvc" inputmode="numeric" autocomplete="off" placeholder="123"><span class="err"></span></div>
+      </div>
+      <button class="btn" id="pay" type="button">Payer</button>
+    </div>
+    <aside class="co-side">
+      <img id="coImg" alt="Aperçu de votre tapis">
+      <div class="summary" style="border:0;padding:0">
+        <div class="row"><span id="coSize"></span><span id="coSizeP"></span></div>
+        <div class="row"><span id="coMat"></span><span id="coMatP"></span></div>
+        <div class="row"><span>Livraison</span><span>Offerte</span></div>
+        <div class="total"><span>Total</span><span id="coTotal"></span></div>
+      </div>
+    </aside>
   </div>
 
-  <div class="legend">
-    <div><span class="road"></span> Routes</div>
-    <div><span class="park"></span> Parcs</div>
-    <div><span class="water"></span> Eau</div>
+  <div id="coDone" class="done" hidden>
+    <div class="check" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 28 28"><path d="M6 14.5l5.5 5.5L22 9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <h2>Commande confirmée</h2>
+    <p style="color:var(--muted)" id="doneMsg"></p>
+    <img id="doneImg" alt="Votre tapis commandé">
+    <dl id="doneDl"></dl>
+    <button class="btn" id="again" type="button" style="max-width:320px">Créer un autre tapis</button>
   </div>
-
-</div>
+</dialog>
 
 <script>
-  let map;
-  let geocoder;
-  let markerMode = false;
+(function(){
+  var W=1200,H=800,WW=800,HH=534;
+  var SIZES={a:{label:'120 × 80 cm',sub:'Pour une chambre',price:49},b:{label:'150 × 100 cm',sub:'Le plus choisi',price:69},c:{label:'180 × 120 cm',sub:'Pour une salle de jeux',price:89}};
+  var MATS={tissu:{label:'Tissu doux',sub:'Feutre épais, toucher laine',price:0},mousse:{label:'Mousse lavable',sub:'Antidérapant, essuyable',price:10}};
+  var state={size:'b',mat:'tissu',busy:false,sample:true,name:'Exemple'};
+  var $=function(s){return document.querySelector(s)};
+  var origC=$('#origC'),matC=$('#matC'),compare=$('#compare'),slider=$('#slider');
+  var euro=function(n){return n+' €'};
 
-  const defaultPosition = {
-    lat: 49.8941,
-    lng: 2.2958
-  };
-
-  /*
-   * Style "carte pour enfants".
-   *
-   * On conserve les cartographiques de Google Maps
-   * mais on change leurs couleurs et leur apparence.
-   */
-  const kidsMapStyle = [
-    {
-      featureType: "all",
-      elementType: "labels.text.fill",
-      stylers: [
-        { color: "#5d5d5d" }
-      ]
-    },
-
-    {
-      featureType: "all",
-      elementType: "labels.text.stroke",
-      stylers: [
-        { color: "#ffffff" },
-        { weight: 3 }
-      ]
-    },
-
-    {
-      featureType: "landscape",
-      elementType: "geometry",
-      stylers: [
-        { color: "#fff4d6" }
-      ]
-    },
-
-    {
-      featureType: "poi.park",
-      elementType: "geometry",
-      stylers: [
-        { color: "#b9e6a3" }
-      ]
-    },
-
-    {
-      featureType: "poi.park",
-      elementType: "labels.text.fill",
-      stylers: [
-        { color: "#4d8b42" }
-      ]
-    },
-
-    {
-      featureType: "water",
-      elementType: "geometry",
-      stylers: [
-        { color: "#9edcff" }
-      ]
-    },
-
-    {
-      featureType: "water",
-      elementType: "labels.text.fill",
-      stylers: [
-        { color: "#3985aa" }
-      ]
-    },
-
-    {
-      featureType: "road",
-      elementType: "geometry",
-      stylers: [
-        { color: "#ffffff" }
-      ]
-    },
-
-    {
-      featureType: "road",
-      elementType: "geometry.stroke",
-      stylers: [
-        { color: "#e5b957" },
-        { weight: 1.5 }
-      ]
-    },
-
-    {
-      featureType: "road.highway",
-      elementType: "geometry",
-      stylers: [
-        { color: "#ffe9a8" }
-      ]
-    },
-
-    {
-      featureType: "road.highway",
-      elementType: "geometry.stroke",
-      stylers: [
-        { color: "#e2a93d" },
-        { weight: 2 }
-      ]
-    },
-
-    {
-      featureType: "transit",
-      elementType: "geometry",
-      stylers: [
-        { color: "#ffb6c9" }
-      ]
-    },
-
-    {
-      featureType: "poi",
-      elementType: "geometry",
-      stylers: [
-        { color: "#ffe7bd" }
-      ]
-    }
-  ];
-
-  function initMap() {
-
-    map = new google.maps.Map(document.getElementById("map"), {
-      center: defaultPosition,
-      zoom: 13,
-
-      styles: kidsMapStyle,
-
-      mapTypeControl: false,
-      streetViewControl: false,
-      fullscreenControl: true,
-
-      zoomControl: true,
-
-      gestureHandling: "greedy"
+  /* ---------- Options ---------- */
+  function buildOpts(host,data,key,name){
+    host.innerHTML='';
+    Object.keys(data).forEach(function(k){
+      var d=data[k],id=name+'_'+k;
+      var w=document.createElement('div');w.className='opt';
+      var extra=name==='mat'?(d.price?'+ '+euro(d.price):'Inclus'):euro(d.price);
+      w.innerHTML='<input type="radio" name="'+name+'" id="'+id+'" value="'+k+'"'+(state[key]===k?' checked':'')+'><label for="'+id+'"><span><b>'+d.label+'</b><small>'+d.sub+'</small></span><span class="p">'+extra+'</span></label>';
+      w.querySelector('input').addEventListener('change',function(){state[key]=k;refresh()});
+      host.appendChild(w);
     });
+  }
+  function total(){return SIZES[state.size].price+MATS[state.mat].price}
+  function refresh(){
+    var s=SIZES[state.size],m=MATS[state.mat];
+    $('#sumSize').textContent='Tapis '+s.label;$('#sumSizeP').textContent=euro(s.price);
+    $('#sumMat').textContent=m.label;$('#sumMatP').textContent=m.price?euro(m.price):'Inclus';
+    $('#total').textContent=euro(total());
+  }
+  buildOpts($('#sizes'),SIZES,'size','size');
+  buildOpts($('#mats'),MATS,'mat','mat');
+  refresh();
 
-    geocoder = new google.maps.Geocoder();
-
-    map.addListener("click", function(event) {
-
-      if (!markerMode) return;
-
-      const emoji =
-        document.getElementById("markerType").value;
-
-      new google.maps.Marker({
-        position: event.latLng,
-        map: map,
-        label: {
-          text: emoji,
-          fontSize: "28px"
-        },
-        icon: {
-          path: google.maps.SymbolPath.CIRCLE,
-          scale: 0
-        }
+  /* ---------- Exemple de carte (style Google Maps) ---------- */
+  function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;var t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+  function drawSample(c){
+    c.width=W;c.height=H;var x=c.getContext('2d'),r=rng(7);
+    x.fillStyle='#F5F5F5';x.fillRect(0,0,W,H);
+    var vx=[150,430,720,1010],hy=[140,410,660];
+    var xs=[0].concat(vx,[W]),ys=[0].concat(hy,[H]);
+    // eau
+    x.fillStyle='#AADAFF';x.beginPath();x.moveTo(1090,0);x.bezierCurveTo(1040,220,1130,420,1070,H);x.lineTo(W,H);x.lineTo(W,0);x.closePath();x.fill();
+    // blocs
+    for(var i=0;i<xs.length-1;i++)for(var j=0;j<ys.length-1;j++){
+      var bx=xs[i]+26,by=ys[j]+26,bw=xs[i+1]-xs[i]-52,bh=ys[j+1]-ys[j]-52;
+      if(bx>1000&&i===4)continue;
+      if(i===1&&j===1){ // parc
+        x.fillStyle='#C8E6C9';x.fillRect(bx,by,bw,bh);
+        x.fillStyle='#A5D6A7';for(var t=0;t<14;t++){x.beginPath();x.arc(bx+20+r()*(bw-40),by+20+r()*(bh-40),10+r()*8,0,7);x.fill()}
+        continue;
+      }
+      x.fillStyle='#E8E6E1';
+      var cols=2+Math.floor(r()*2),rows=1+Math.floor(r()*2);
+      for(var a=0;a<cols;a++)for(var b=0;b<rows;b++){
+        var w=bw/cols,h=bh/rows;
+        x.fillRect(bx+a*w+5,by+b*h+5,w-10,h-10);
+      }
+    }
+    // routes
+    function road(pts,w,fill,edge){
+      [[w+5,edge],[w,fill]].forEach(function(p){
+        x.lineCap='round';x.lineJoin='round';x.strokeStyle=p[1];x.lineWidth=p[0];x.beginPath();x.moveTo(pts[0][0],pts[0][1]);
+        for(var k=1;k<pts.length;k++)x.lineTo(pts[k][0],pts[k][1]);x.stroke();
       });
-
-      markerMode = false;
-
-      document.body.style.cursor = "default";
-    });
-  }
-
-  function searchPlace() {
-
-    const address =
-      document.getElementById("address").value.trim();
-
-    if (!address) {
-      alert("Entre une ville ou une adresse !");
-      return;
     }
+    vx.forEach(function(v){road([[v,-20],[v,H+20]],32,'#FFFFFF','#DADCE0')});
+    hy.forEach(function(v,i){ if(i===1)return; road([[-20,v],[W+20,v]],32,'#FFFFFF','#DADCE0')});
+    road([[-20,hy[1]],[W+20,hy[1]]],44,'#FCE8A6','#F0C36D');
+    road([[-20,760],[430,410],[720,140],[W+20,-20]],24,'#FFFFFF','#DADCE0');
+    // pont
+    x.fillStyle='#FCE8A6';x.fillRect(1060,hy[1]-22,70,44);
+    // noms de rues
+    x.fillStyle='#70757A';x.font='600 16px Arial';x.textAlign='center';
+    x.save();x.translate(vx[2],250);x.rotate(-Math.PI/2);x.fillText('Rue des Lilas',0,5);x.restore();
+    x.fillText('Avenue de la République',300,hy[1]+5);
+    x.fillText('Rue Pasteur',600,hy[0]+5);
+    x.fillText('Parc Saint-Martin',(xs[1]+xs[2])/2,(ys[1]+ys[2])/2+5);
+  }
 
-    geocoder.geocode(
-      { address: address },
-      function(results, status) {
+  /* ---------- « IA » simulée : redessin couleur par couleur ---------- */
+  var LAND=[247,235,200],ROAD=[90,100,120],MAJOR=[67,76,94],PARK=[127,198,107],WATER=[82,184,234];
+  var ROOFS=[[244,151,142],[255,200,87],[154,208,236],[184,161,227],[255,179,122],[143,214,176]];
+  function hash(a,b){var h=Math.imul(a,374761393)^Math.imul(b,668265263);h=Math.imul(h^(h>>>13),1274126177);return(h^(h>>>16))>>>0}
 
-        if (status === "OK" && results[0]) {
-
-          map.setCenter(results[0].geometry.location);
-
-          map.setZoom(14);
-
-        } else {
-
-          alert(
-            "Impossible de trouver cet endroit."
-          );
-
-        }
+  function toMat(src){
+    var wc=document.createElement('canvas');wc.width=WW;wc.height=HH;var wx=wc.getContext('2d');
+    wx.imageSmoothingQuality='high';wx.drawImage(src,0,0,WW,HH);
+    var img=wx.getImageData(0,0,WW,HH),d=img.data,n=WW*HH;
+    // couleur du fond : pic de luminosité parmi les pixels neutres
+    var hist=new Uint32Array(256);
+    for(var i=0;i<n;i++){var r=d[i*4],g=d[i*4+1],b=d[i*4+2];var mx=Math.max(r,g,b),mn=Math.min(r,g,b);if(mx-mn<12){var l=(r+g+b)/3|0;if(l>195)hist[l]++}}
+    var L=245,best=0;for(var k=195;k<256;k++){if(hist[k]>best){best=hist[k];L=k}}
+    var roadT=Math.min(252,L+4),bldT=L-7;
+    var cls=new Uint8Array(n);
+    for(var p=0;p<n;p++){
+      var R=d[p*4],G=d[p*4+1],B=d[p*4+2],mn2=Math.min(R,G,B),lum=(R+G+B)/3,c=0;
+      if(B-R>28&&B>=G-4&&B>150)c=5;
+      else if(G-R>9&&G-B>5&&G>150)c=4;
+      else if(R-B>38&&R>225)c=2;
+      else if(mn2>=roadT)c=1;
+      else if(lum<bldT)c=3;
+      cls[p]=c;
+    }
+    // filtre majoritaire : supprime textes, contours et petits parasites
+    var out=new Uint8Array(n),cnt=new Uint16Array(6),rad=2;
+    for(var y=0;y<HH;y++)for(var xx=0;xx<WW;xx++){
+      cnt.fill(0);
+      for(var dy=-rad;dy<=rad;dy++){var yy=y+dy;if(yy<0||yy>=HH)continue;
+        for(var dx=-rad;dx<=rad;dx++){var x2=xx+dx;if(x2<0||x2>=WW)continue;cnt[cls[yy*WW+x2]]++}}
+      var bi=cls[y*WW+xx],bc=cnt[bi];
+      for(var q=0;q<6;q++)if(cnt[q]>bc){bc=cnt[q];bi=q}
+      out[y*WW+xx]=bi;
+    }
+    // couleurs de jeu
+    var o=wx.createImageData(WW,HH),od=o.data;
+    for(var y2=0;y2<HH;y2++)for(var x3=0;x3<WW;x3++){
+      var idx=y2*WW+x3,k2=out[idx],col;
+      if(k2===0)col=LAND;else if(k2===1)col=ROAD;else if(k2===2)col=MAJOR;else if(k2===4)col=PARK;else if(k2===5)col=WATER;
+      else{
+        col=ROOFS[hash(Math.floor(x3/70),Math.floor(y2/70))%ROOFS.length];
+        var below=(y2+2<HH&&x3+2<WW)?out[(y2+2)*WW+x3+2]:3;
+        if(below!==3)col=[col[0]*.78,col[1]*.78,col[2]*.78];
       }
-    );
+      od[idx*4]=col[0];od[idx*4+1]=col[1];od[idx*4+2]=col[2];od[idx*4+3]=255;
+    }
+    wx.putImageData(o,0,0);
+    // rendu final : lissage, texture feutre, bordure cousue
+    matC.width=W;matC.height=H;var mx2=matC.getContext('2d');
+    mx2.imageSmoothingEnabled=true;mx2.imageSmoothingQuality='high';mx2.drawImage(wc,0,0,W,H);
+    var nz=document.createElement('canvas');nz.width=nz.height=160;var nx=nz.getContext('2d'),nd=nx.createImageData(160,160);
+    for(var z=0;z<nd.data.length;z+=4){var v=Math.random()*255;nd.data[z]=nd.data[z+1]=nd.data[z+2]=v;nd.data[z+3]=255}
+    nx.putImageData(nd,0,0);
+    mx2.save();mx2.globalAlpha=.09;mx2.globalCompositeOperation='multiply';mx2.fillStyle=mx2.createPattern(nz,'repeat');mx2.fillRect(0,0,W,H);mx2.restore();
+    var bw=26;
+    mx2.fillStyle='#3A4660';
+    mx2.fillRect(0,0,W,bw);mx2.fillRect(0,H-bw,W,bw);mx2.fillRect(0,0,bw,H);mx2.fillRect(W-bw,0,bw,H);
+    mx2.setLineDash([12,9]);mx2.strokeStyle='rgba(255,255,255,.85)';mx2.lineWidth=3;mx2.lineCap='round';
+    mx2.strokeRect(bw/2,bw/2,W-bw,H-bw);
+    mx2.setLineDash([]);
   }
 
-  function zoomIn() {
+  /* ---------- Chargement d'une image ---------- */
+  function setPos(v){compare.style.setProperty('--pos',v+'%');slider.value=v}
+  slider.addEventListener('input',function(){setPos(slider.value)});
 
-    const currentZoom = map.getZoom();
+  function reduced(){return window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches}
 
-    map.setZoom(currentZoom + 1);
+  function generate(drawFn,label,isSample){
+    if(state.busy)return;
+    state.busy=true;
+    drawFn();
+    var busy=$('#busy'),bar=$('#barI'),txt=$('#busyTxt');
+    var steps=['Analyse des rues','Détection des parcs et de l\'eau','Choix des couleurs du tapis','Ajout des finitions cousues'];
+    if(isSample){ // première ouverture : pas d'attente
+      toMat(origC);setPos(50);state.busy=false;finish();return;
+    }
+    busy.classList.add('on');setPos(100);
+    var start=performance.now(),dur=2200,done=false;
+    $('#order').disabled=true;
+    (function tick(now){
+      var t=Math.min(1,(now-start)/dur);
+      bar.style.width=(t*100)+'%';
+      txt.textContent=steps[Math.min(steps.length-1,Math.floor(t*steps.length))];
+      if(t<1){requestAnimationFrame(tick);return}
+      toMat(origC);busy.classList.remove('on');bar.style.width='0';
+      state.busy=false;$('#order').disabled=false;
+      reveal();finish();
+    })(start);
+    function finish(){
+      state.sample=isSample;state.name=label;
+      $('#status').innerHTML=isSample
+        ?'<i></i><span>Exemple affiché.</span>'
+        :'<i style="background:var(--ok)"></i><span>'+escapeHtml(label)+' <button class="sample-link" id="useSample" type="button">Revoir l\'exemple</button></span>';
+      var us=$('#useSample');if(us)us.addEventListener('click',loadSample);
+    }
   }
-
-  function zoomOut() {
-
-    const currentZoom = map.getZoom();
-
-    map.setZoom(currentZoom - 1);
+  function reveal(){
+    if(reduced()){setPos(50);return}
+    var s=performance.now(),from=100,to=50,dur=1100;
+    (function f(now){var t=Math.min(1,(now-s)/dur),e=1-Math.pow(1-t,3);setPos(from+(to-from)*e);if(t<1)requestAnimationFrame(f)})(s);
   }
+  function escapeHtml(s){return s.replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 
-  function resetMap() {
-
-    map.setCenter(defaultPosition);
-    map.setZoom(13);
+  function loadSample(){generate(function(){drawSample(origC)},'Exemple',true)}
+  function loadFile(file){
+    if(!file||!/^image\//.test(file.type)){
+      $('#status').innerHTML='<i style="background:var(--danger)"></i><span style="color:var(--danger)">Ce fichier n\'est pas une image. Importez un PNG ou un JPG.</span>';return;
+    }
+    var url=URL.createObjectURL(file),im=new Image();
+    im.onload=function(){
+      generate(function(){
+        origC.width=W;origC.height=H;var c=origC.getContext('2d');
+        var s=Math.max(W/im.naturalWidth,H/im.naturalHeight),dw=im.naturalWidth*s,dh=im.naturalHeight*s;
+        c.imageSmoothingQuality='high';c.drawImage(im,(W-dw)/2,(H-dh)/2,dw,dh);
+        URL.revokeObjectURL(url);
+      },file.name||'Capture collée',false);
+    };
+    im.onerror=function(){$('#status').innerHTML='<i style="background:var(--danger)"></i><span style="color:var(--danger)">Impossible de lire cette image. Essayez un autre fichier.</span>'};
+    im.src=url;
   }
+  var drop=$('#drop'),file=$('#file');
+  drop.addEventListener('click',function(){file.click()});
+  file.addEventListener('change',function(){loadFile(file.files[0]);file.value=''});
+  ['dragenter','dragover'].forEach(function(e){drop.addEventListener(e,function(ev){ev.preventDefault();drop.classList.add('over')})});
+  ['dragleave','drop'].forEach(function(e){drop.addEventListener(e,function(ev){ev.preventDefault();drop.classList.remove('over')})});
+  drop.addEventListener('drop',function(ev){loadFile(ev.dataTransfer.files[0])});
+  window.addEventListener('dragover',function(e){e.preventDefault()});
+  window.addEventListener('drop',function(e){e.preventDefault();if(e.dataTransfer&&e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0])});
+  window.addEventListener('paste',function(e){
+    var items=(e.clipboardData||{}).items||[];
+    for(var i=0;i<items.length;i++){if(items[i].type.indexOf('image')===0){loadFile(items[i].getAsFile());break}}
+  });
 
-  function activateMarkerMode() {
-
-    markerMode = true;
-
-    document.body.style.cursor = "crosshair";
-
-    alert(
-      "Clique maintenant sur la carte pour placer ton élément !"
-    );
+  /* ---------- Commande (simulation) ---------- */
+  var dlg=$('#dlg');
+  function openCheckout(){
+    var s=SIZES[state.size],m=MATS[state.mat],t=total();
+    $('#coImg').src=matC.toDataURL('image/jpeg',.82);
+    $('#coSize').textContent='Tapis '+s.label;$('#coSizeP').textContent=euro(s.price);
+    $('#coMat').textContent=m.label;$('#coMatP').textContent=m.price?euro(m.price):'Inclus';
+    $('#coTotal').textContent=euro(t);$('#pay').textContent='Payer '+euro(t);
+    $('#coForm').hidden=false;$('#coDone').hidden=true;
+    document.querySelectorAll('.field').forEach(function(f){f.classList.remove('bad')});
+    if(typeof dlg.showModal==='function')dlg.showModal();else dlg.setAttribute('open','');
   }
+  $('#order').addEventListener('click',openCheckout);
+  $('#dlgClose').addEventListener('click',function(){dlg.close()});
+  dlg.addEventListener('click',function(e){if(e.target===dlg)dlg.close()});
 
-  function printMap() {
+  function digits(s){return s.replace(/\D/g,'')}
+  $('#fCard').addEventListener('input',function(e){var v=digits(e.target.value).slice(0,16);e.target.value=v.replace(/(.{4})/g,'$1 ').trim()});
+  $('#fExp').addEventListener('input',function(e){var v=digits(e.target.value).slice(0,4);e.target.value=v.length>2?v.slice(0,2)+'/'+v.slice(2):v});
+  $('#fCvc').addEventListener('input',function(e){e.target.value=digits(e.target.value).slice(0,3)});
+  $('#fZip').addEventListener('input',function(e){e.target.value=digits(e.target.value).slice(0,5)});
+  $('#fillTest').addEventListener('click',function(){
+    var v={fName:'Camille Martin',fMail:'camille.martin@example.fr',fAddr:'12 rue des Lilas',fZip:'75011',fCity:'Paris',fCard:'4242 4242 4242 4242',fExp:'12/29',fCvc:'123'};
+    Object.keys(v).forEach(function(k){$('#'+k).value=v[k]});
+    document.querySelectorAll('.field').forEach(function(f){f.classList.remove('bad')});
+  });
 
-    window.print();
+  function check(id,ok,msg){
+    var f=$('#'+id).closest('.field');
+    f.classList.toggle('bad',!ok);
+    if(!ok)f.querySelector('.err').textContent=msg;
+    return ok;
   }
+  function validate(){
+    var res=[
+      ['fName',$('#fName').value.trim().length>=3,'Entrez votre prénom et votre nom.'],
+      ['fMail',/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test($('#fMail').value.trim()),'Entrez une adresse e-mail valide.'],
+      ['fAddr',$('#fAddr').value.trim().length>=5,'Entrez votre adresse de livraison.'],
+      ['fZip',digits($('#fZip').value).length===5,'Le code postal comporte 5 chiffres.'],
+      ['fCity',$('#fCity').value.trim().length>=2,'Entrez votre ville.'],
+      ['fCard',digits($('#fCard').value).length===16,'Le numéro de carte comporte 16 chiffres.'],
+      ['fExp',(function(){var m=$('#fExp').value.match(/^(\d{2})\/(\d{2})$/);return !!m&&+m[1]>=1&&+m[1]<=12})(),'Entrez la date au format MM/AA.'],
+      ['fCvc',digits($('#fCvc').value).length===3,'Le code comporte 3 chiffres.']
+    ];
+    var first=null;
+    res.forEach(function(r){if(!check(r[0],r[1],r[2])&&!first)first=r[0]});
+    if(first)$('#'+first).focus();
+    return !first;
+  }
+  $('#pay').addEventListener('click',function(){
+    if(!validate())return;
+    var b=$('#pay'),label=b.textContent;
+    b.disabled=true;b.innerHTML='<span class="spin"></span> Paiement en cours';
+    setTimeout(function(){
+      b.disabled=false;b.textContent=label;
+      var num='MR-'+Math.floor(10000+Math.random()*89999);
+      var s=SIZES[state.size],m=MATS[state.mat];
+      var eta=new Date();eta.setDate(eta.getDate()+7);
+      $('#doneImg').src=$('#coImg').src;
+      $('#doneMsg').textContent='Merci '+$('#fName').value.trim().split(' ')[0]+'. Un e-mail de confirmation serait envoyé à '+$('#fMail').value.trim()+'.';
+      $('#doneDl').innerHTML=
+        '<dt>Commande</dt><dd>'+num+'</dd>'+
+        '<dt>Tapis</dt><dd>'+s.label+', '+m.label.toLowerCase()+'</dd>'+
+        '<dt>Total payé</dt><dd>'+euro(total())+'</dd>'+
+        '<dt>Livraison estimée</dt><dd>'+eta.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+'</dd>';
+      $('#coForm').hidden=true;$('#coDone').hidden=false;
+      dlg.scrollTop=0;
+    },1700);
+  });
+  $('#again').addEventListener('click',function(){dlg.close();document.querySelector('#studio').scrollIntoView({behavior:reduced()?'auto':'smooth'})});
 
-  document
-    .getElementById("address")
-    .addEventListener("keydown", function(event) {
-
-      if (event.key === "Enter") {
-        searchPlace();
-      }
-
-    });
+  loadSample();
+})();
 </script>
-
-<!--
-  REMPLACE "VOTRE_CLE_GOOGLE_MAPS" PAR TA CLÉ API.
-
-  La clé doit avoir l'API Maps JavaScript activée.
--->
-<script
-  async
-  defer
-  src="https://maps.googleapis.com/maps/api/js?key=VOTRE_CLE_GOOGLE_MAPS&callback=initMap">
-</script>
-
 </body>
 </html>
