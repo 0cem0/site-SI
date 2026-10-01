@@ -1,2 +1,526 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ma carte pour enfants</title>
 
-yooo
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Comic Sans MS", "Trebuchet MS", sans-serif;
+      background: #fff8e8;
+      color: #333;
+    }
+
+    header {
+      background: #ffcf5c;
+      padding: 18px 25px;
+      text-align: center;
+      border-bottom: 5px solid #f2a93b;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 30px;
+      color: #5d4327;
+    }
+
+    header p {
+      margin: 5px 0 0;
+      color: #73552f;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 15px;
+      background: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,.08);
+      align-items: center;
+    }
+
+    .toolbar input {
+      flex: 1;
+      min-width: 220px;
+      padding: 12px 15px;
+      border: 3px solid #ffd166;
+      border-radius: 15px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      background: #ff8fab;
+      color: white;
+      box-shadow: 0 3px 0 #d96882;
+      transition: transform .1s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+    }
+
+    button:active {
+      transform: translateY(1px);
+      box-shadow: 0 1px 0 #d96882;
+    }
+
+    .blue {
+      background: #64b5f6;
+      box-shadow: 0 3px 0 #368aca;
+    }
+
+    .green {
+      background: #81c784;
+      box-shadow: 0 3px 0 #55a45a;
+    }
+
+    .purple {
+      background: #ba8cff;
+      box-shadow: 0 3px 0 #875bd1;
+    }
+
+    .orange {
+      background: #ffab5c;
+      box-shadow: 0 3px 0 #db7c27;
+    }
+
+    #map-container {
+      position: relative;
+      width: 100%;
+      height: calc(100vh - 155px);
+      min-height: 500px;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    .legend {
+      position: absolute;
+      left: 20px;
+      bottom: 20px;
+      background: rgba(255,255,255,.94);
+      padding: 12px 16px;
+      border-radius: 15px;
+      box-shadow: 0 3px 15px rgba(0,0,0,.15);
+      font-size: 14px;
+    }
+
+    .legend div {
+      margin: 5px 0;
+    }
+
+    .road {
+      display: inline-block;
+      width: 25px;
+      height: 8px;
+      background: #fff;
+      border: 2px solid #e0a83a;
+      border-radius: 5px;
+      margin-right: 6px;
+    }
+
+    .park {
+      display: inline-block;
+      width: 20px;
+      height: 14px;
+      background: #9bd88d;
+      border-radius: 5px;
+      margin-right: 6px;
+    }
+
+    .water {
+      display: inline-block;
+      width: 20px;
+      height: 14px;
+      background: #82cfff;
+      border-radius: 5px;
+      margin-right: 6px;
+    }
+
+    .marker-panel {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      background: rgba(255,255,255,.96);
+      padding: 15px;
+      border-radius: 18px;
+      box-shadow: 0 3px 15px rgba(0,0,0,.15);
+      width: 210px;
+    }
+
+    .marker-panel h3 {
+      margin: 0 0 10px;
+      font-size: 17px;
+    }
+
+    .marker-panel select {
+      width: 100%;
+      padding: 9px;
+      border-radius: 10px;
+      border: 2px solid #ddd;
+      margin-bottom: 8px;
+    }
+
+    .marker-panel button {
+      width: 100%;
+    }
+
+    @media print {
+      header,
+      .toolbar,
+      .legend,
+      .marker-panel {
+        display: none;
+      }
+
+      #map-container,
+      #map {
+        height: 100vh;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>🗺️ Ma super carte pour enfants 🌈</h1>
+  <p>Explore une ville et transforme-la en carte colorée et amusante !</p>
+</header>
+
+<div class="toolbar">
+
+  <input
+    id="address"
+    type="text"
+    placeholder="🔎 Entre une ville ou une adresse..."
+  >
+
+  <button class="blue" onclick="searchPlace()">
+    🔎 Rechercher
+  </button>
+
+  <button class="green" onclick="zoomIn()">
+    ➕ Zoom
+  </button>
+
+  <button class="orange" onclick="zoomOut()">
+    ➖ Dézoom
+  </button>
+
+  <button class="purple" onclick="printMap()">
+    🖨️ Imprimer
+  </button>
+
+  <button onclick="resetMap()">
+    🏠 Recentrer
+  </button>
+
+</div>
+
+<div id="map-container">
+
+  <div id="map"></div>
+
+  <div class="marker-panel">
+    <h3>⭐ Ajouter un endroit</h3>
+
+    <select id="markerType">
+      <option value="🏠">🏠 Maison</option>
+      <option value="🏫">🏫 École</option>
+      <option value="🌳">🌳 Parc</option>
+      <option value="🏰">🏰 Château</option>
+      <option value="🍦">🍦 Glace</option>
+      <option value="🐻">🐻 Animal</option>
+      <option value="⭐">⭐ Trésor</option>
+    </select>
+
+    <button onclick="activateMarkerMode()">
+      📍 Placer sur la carte
+    </button>
+  </div>
+
+  <div class="legend">
+    <div><span class="road"></span> Routes</div>
+    <div><span class="park"></span> Parcs</div>
+    <div><span class="water"></span> Eau</div>
+  </div>
+
+</div>
+
+<script>
+  let map;
+  let geocoder;
+  let markerMode = false;
+
+  const defaultPosition = {
+    lat: 49.8941,
+    lng: 2.2958
+  };
+
+  /*
+   * Style "carte pour enfants".
+   *
+   * On conserve les données cartographiques de Google Maps
+   * mais on change leurs couleurs et leur apparence.
+   */
+  const kidsMapStyle = [
+    {
+      featureType: "all",
+      elementType: "labels.text.fill",
+      stylers: [
+        { color: "#5d5d5d" }
+      ]
+    },
+
+    {
+      featureType: "all",
+      elementType: "labels.text.stroke",
+      stylers: [
+        { color: "#ffffff" },
+        { weight: 3 }
+      ]
+    },
+
+    {
+      featureType: "landscape",
+      elementType: "geometry",
+      stylers: [
+        { color: "#fff4d6" }
+      ]
+    },
+
+    {
+      featureType: "poi.park",
+      elementType: "geometry",
+      stylers: [
+        { color: "#b9e6a3" }
+      ]
+    },
+
+    {
+      featureType: "poi.park",
+      elementType: "labels.text.fill",
+      stylers: [
+        { color: "#4d8b42" }
+      ]
+    },
+
+    {
+      featureType: "water",
+      elementType: "geometry",
+      stylers: [
+        { color: "#9edcff" }
+      ]
+    },
+
+    {
+      featureType: "water",
+      elementType: "labels.text.fill",
+      stylers: [
+        { color: "#3985aa" }
+      ]
+    },
+
+    {
+      featureType: "road",
+      elementType: "geometry",
+      stylers: [
+        { color: "#ffffff" }
+      ]
+    },
+
+    {
+      featureType: "road",
+      elementType: "geometry.stroke",
+      stylers: [
+        { color: "#e5b957" },
+        { weight: 1.5 }
+      ]
+    },
+
+    {
+      featureType: "road.highway",
+      elementType: "geometry",
+      stylers: [
+        { color: "#ffe9a8" }
+      ]
+    },
+
+    {
+      featureType: "road.highway",
+      elementType: "geometry.stroke",
+      stylers: [
+        { color: "#e2a93d" },
+        { weight: 2 }
+      ]
+    },
+
+    {
+      featureType: "transit",
+      elementType: "geometry",
+      stylers: [
+        { color: "#ffb6c9" }
+      ]
+    },
+
+    {
+      featureType: "poi",
+      elementType: "geometry",
+      stylers: [
+        { color: "#ffe7bd" }
+      ]
+    }
+  ];
+
+  function initMap() {
+
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: defaultPosition,
+      zoom: 13,
+
+      styles: kidsMapStyle,
+
+      mapTypeControl: false,
+      streetViewControl: false,
+      fullscreenControl: true,
+
+      zoomControl: true,
+
+      gestureHandling: "greedy"
+    });
+
+    geocoder = new google.maps.Geocoder();
+
+    map.addListener("click", function(event) {
+
+      if (!markerMode) return;
+
+      const emoji =
+        document.getElementById("markerType").value;
+
+      new google.maps.Marker({
+        position: event.latLng,
+        map: map,
+        label: {
+          text: emoji,
+          fontSize: "28px"
+        },
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 0
+        }
+      });
+
+      markerMode = false;
+
+      document.body.style.cursor = "default";
+    });
+  }
+
+  function searchPlace() {
+
+    const address =
+      document.getElementById("address").value.trim();
+
+    if (!address) {
+      alert("Entre une ville ou une adresse !");
+      return;
+    }
+
+    geocoder.geocode(
+      { address: address },
+      function(results, status) {
+
+        if (status === "OK" && results[0]) {
+
+          map.setCenter(results[0].geometry.location);
+
+          map.setZoom(14);
+
+        } else {
+
+          alert(
+            "Impossible de trouver cet endroit."
+          );
+
+        }
+      }
+    );
+  }
+
+  function zoomIn() {
+
+    const currentZoom = map.getZoom();
+
+    map.setZoom(currentZoom + 1);
+  }
+
+  function zoomOut() {
+
+    const currentZoom = map.getZoom();
+
+    map.setZoom(currentZoom - 1);
+  }
+
+  function resetMap() {
+
+    map.setCenter(defaultPosition);
+    map.setZoom(13);
+  }
+
+  function activateMarkerMode() {
+
+    markerMode = true;
+
+    document.body.style.cursor = "crosshair";
+
+    alert(
+      "Clique maintenant sur la carte pour placer ton élément !"
+    );
+  }
+
+  function printMap() {
+
+    window.print();
+  }
+
+  document
+    .getElementById("address")
+    .addEventListener("keydown", function(event) {
+
+      if (event.key === "Enter") {
+        searchPlace();
+      }
+
+    });
+</script>
+
+<!--
+  REMPLACE "VOTRE_CLE_GOOGLE_MAPS" PAR TA CLÉ API.
+
+  La clé doit avoir l'API Maps JavaScript activée.
+-->
+<script
+  async
+  defer
+  src="https://maps.googleapis.com/maps/api/js?key=VOTRE_CLE_GOOGLE_MAPS&callback=initMap">
+</script>
+
+</body>
+</html>
