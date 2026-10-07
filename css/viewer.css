@@ -1,0 +1,40 @@
+/* ============================================================
+   viewer.css — Visualisation 3D
+   ============================================================ */
+html, body { height: 100%; }
+body { display: flex; flex-direction: column; overflow: hidden; }
+#site-header { flex: none; }
+.viewer { flex: 1; min-height: 0; padding: 0 16px 16px; }
+.stage { position: relative; height: 100%; border-radius: 24px; overflow: hidden; background: #F1EFEA; box-shadow: var(--shadow-s); border: 1px solid var(--line); }
+#gl { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+#gl:active { cursor: grabbing; }
+
+.loader { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 18px; align-items: center; justify-content: center; background: #F1EFEA; z-index: 5; transition: opacity .6s, visibility .6s; }
+.loader.done { opacity: 0; visibility: hidden; }
+.loader p { font-family: var(--head); font-weight: 700; font-size: 1.2rem; }
+.loader-road { position: relative; width: 220px; height: 14px; border-radius: 99px; background: var(--road); overflow: hidden; }
+.loader-road i { position: absolute; top: 5px; left: 0; right: 0; height: 4px; background: repeating-linear-gradient(90deg, #fff 0 14px, transparent 14px 28px); animation: ld .6s linear infinite; }
+@keyframes ld { to { background-position-x: -28px; } }
+
+.nogl { position: absolute; inset: 0; z-index: 4; display: flex; flex-direction: column; gap: 16px; align-items: center; justify-content: center; background: #F1EFEA; padding: 24px; text-align: center; }
+.nogl img { max-width: min(560px, 90%); border-radius: 12px; box-shadow: var(--shadow-l); }
+
+.info { position: absolute; top: 18px; left: 18px; background: rgba(255, 255, 255, .92); backdrop-filter: blur(8px); padding: 10px 16px; border-radius: 14px; box-shadow: var(--shadow-s); display: flex; flex-direction: column; line-height: 1.25; animation: pop .6s var(--ease) .4s backwards; }
+.info b { font-family: var(--head); font-size: 1.1rem; }
+.info span { color: var(--muted); font-size: .88rem; }
+.hint { position: absolute; top: 18px; right: 18px; background: rgba(22, 32, 46, .82); color: #fff; padding: 9px 16px; border-radius: 99px; font-size: .85rem; transition: opacity .6s; animation: pop .6s var(--ease) .6s backwards; max-width: 46%; }
+.hint.hide { opacity: 0; pointer-events: none; }
+
+.toolbar { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: center; background: rgba(255, 255, 255, .94); backdrop-filter: blur(10px); padding: 10px; border-radius: 20px; box-shadow: var(--shadow-l); max-width: calc(100% - 24px); animation: up .7s var(--ease) .5s backwards; }
+@keyframes up { from { opacity: 0; transform: translate(-50%, 30px); } }
+.group { display: flex; gap: 4px; background: var(--soft); padding: 4px; border-radius: 14px; }
+.group button { border: 0; background: transparent; padding: 9px 14px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: .9rem; color: var(--muted); transition: background .15s, color .15s, transform .15s var(--ease); white-space: nowrap; }
+.group button:hover { color: var(--ink); transform: translateY(-1px); }
+.group button.on { background: #fff; color: var(--ink); box-shadow: 0 1px 4px rgba(0, 0, 0, .15); }
+.group button.tog.on::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--grass); margin-right: 7px; }
+
+@media (max-width: 860px) {
+  .hint { display: none; }
+  .toolbar { gap: 6px; padding: 8px; }
+  .group button { padding: 8px 10px; font-size: .82rem; }
+}
