@@ -1,0 +1,53 @@
+/* ============================================================
+   paiement.css — Page de paiement (simulé) et confirmation
+   ============================================================ */
+.pay-grid { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 28px; align-items: start; padding-bottom: 90px; }
+.form-card, .side-card { background: #fff; border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow-s); padding: 30px; }
+.form-card { display: flex; flex-direction: column; gap: 18px; }
+.form-card h1 { font-size: clamp(1.8rem, 3vw, 2.3rem); font-weight: 800; }
+.form-card h2 { font-size: 1.15rem; margin-top: 8px; }
+.demo { background: #FFF3D6; border: 1px solid #F0C36D; border-radius: 14px; padding: 12px 14px; font-size: .9rem; display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; }
+.demo button { background: none; border: 0; padding: 0; text-decoration: underline; font-weight: 600; cursor: pointer; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.field.full { grid-column: 1 / -1; }
+.secure { text-align: center; color: var(--muted); font-size: .85rem; }
+
+.card-visual { position: relative; height: 150px; border-radius: 18px; padding: 18px 22px; color: #fff; background: linear-gradient(135deg, #16202E, #2F4666 60%, #3D6A5C); display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 14px 30px -14px rgba(22, 32, 46, .6); overflow: hidden; max-width: 380px; }
+.card-visual::after { content: ""; position: absolute; right: -40px; top: -40px; width: 160px; height: 160px; border-radius: 50%; background: rgba(255, 200, 61, .22); }
+.chip-c { width: 40px; height: 30px; border-radius: 7px; background: linear-gradient(135deg, #FFD966, #E0A82E); }
+.cnum { font-family: var(--head); font-size: 1.35rem; letter-spacing: .12em; font-weight: 700; }
+.cmeta { display: flex; justify-content: space-between; font-size: .82rem; letter-spacing: .08em; opacity: .9; }
+
+.side-card { display: flex; flex-direction: column; gap: 22px; position: sticky; top: 92px; }
+.side-card h3 { font-size: 1.05rem; margin-bottom: 10px; }
+.thumb { position: relative; border-radius: 14px; overflow: hidden; background: var(--soft); aspect-ratio: 3 / 2; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease); }
+.thumb:hover img { transform: scale(1.05) rotate(-.6deg); }
+.thumb-3d { position: absolute; right: 10px; bottom: 10px; background: var(--ink); color: #fff; padding: 7px 14px; border-radius: 99px; font-size: .82rem; font-weight: 600; text-decoration: none; }
+.edit { text-align: center; font-size: .9rem; }
+.edit a { color: var(--muted); }
+
+/* ---------- Confirmation ---------- */
+.done-card { position: relative; text-align: center; padding: 30px 0 90px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.done-card > * { position: relative; z-index: 1; }
+#confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 40; }
+.check { width: 84px; height: 84px; border-radius: 50%; background: var(--grass); display: grid; place-items: center; animation: pop .6s var(--ease); box-shadow: 0 0 0 0 rgba(93, 166, 46, .5), 0 10px 24px -8px rgba(93, 166, 46, .8); }
+.check svg { width: 52px; height: 52px; }
+.check circle { stroke-dasharray: 151; stroke-dashoffset: 151; animation: draw .7s .15s ease-out forwards; }
+.check path { stroke-dasharray: 40; stroke-dashoffset: 40; animation: draw .5s .65s ease-out forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.done-card h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; }
+.done-body { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 36px; align-items: center; text-align: left; margin-top: 18px; max-width: 900px; width: 100%; background: #fff; border: 1px solid var(--line); border-radius: 22px; padding: 26px; box-shadow: var(--shadow-s); animation: up .8s var(--ease) .3s backwards; }
+@keyframes up { from { opacity: 0; transform: translateY(30px); } }
+.done-body img { border-radius: 14px; width: 100%; box-shadow: var(--shadow-s); }
+.done-body dl { display: grid; grid-template-columns: auto 1fr; gap: 10px 22px; margin: 0; }
+.done-body dt { color: var(--muted); }
+.done-body dd { margin: 0; font-weight: 600; }
+.done-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 12px; }
+
+@media (max-width: 980px) {
+  .pay-grid { grid-template-columns: 1fr; }
+  .side-card { position: static; order: -1; }
+  .done-body { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) { .grid2 { grid-template-columns: 1fr; } .form-card, .side-card { padding: 22px; } }
