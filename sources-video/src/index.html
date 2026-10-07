@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Minirue – vidéo de présentation</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="car" viewBox="0 0 120 56">
+    <path d="M28 28l13-17c2-2.500 4-3.500 7-3.500h30c3 0 5 1 7 3.500l12 17z" fill="currentColor"/>
+    <path d="M36 27l9.500-12c1-1.200 2-1.800 3.500-1.800h12V27zM68 13.200h9c1.500 0 2.600.6 3.600 1.800L90 27H68z" fill="#EAF6FF"/>
+    <rect x="3" y="26" width="114" height="21" rx="9" fill="currentColor"/>
+    <circle cx="30" cy="46" r="9.500" fill="#1D2430"/><circle cx="30" cy="46" r="4" fill="#CFD5DC"/>
+    <circle cx="90" cy="46" r="9.500" fill="#1D2430"/><circle cx="90" cy="46" r="4" fill="#CFD5DC"/>
+  </symbol>
+</svg>
+
+<div id="stage">
+
+  <!-- ============ 0. ACCUEIL ============ -->
+  <section class="scene" id="s0">
+    <div class="tilt" id="tilt0"><div class="tiltIn"><img src="../assets/mat.png" alt=""></div></div>
+    <div class="roadH" style="top:860px"><i></i></div>
+    <div id="cars0"></div>
+    <h1 class="hl xl" id="h0" style="top:176px; font-size:120px">
+      <span class="ln"><span class="in">Votre rue</span></span>
+      <span class="ln"><span class="in">devient un</span></span>
+      <span class="ln"><span class="in">terrain</span></span>
+      <span class="ln"><span class="in">de jeu.</span></span>
+    </h1>
+    <p class="sub" id="sub0" style="top:702px; width:820px">
+      <span class="ln"><span class="in" style="white-space:nowrap">Importez une capture de Google Maps.</span></span>
+      <span class="ln"><span class="in" style="white-space:nowrap">L’IA la transforme en tapis pour enfants.</span></span>
+    </p>
+    <div class="lock" id="lock0"><span class="mark"></span><span class="word">Minirue</span></div>
+  </section>
+
+  <!-- ============ 1. CAPTURE ============ -->
+  <section class="scene" id="s1">
+    <h2 class="hl" id="h1" style="top:230px">
+      <span class="ln"><span class="in">Prenez une</span></span>
+      <span class="ln"><span class="in">capture de</span></span>
+      <span class="ln"><span class="in">votre rue.</span></span>
+    </h2>
+    <p class="sub" id="sub1" style="top:590px"><span class="ln"><span class="in">Dans Google Maps, en vue plan.</span></span></p>
+    <div class="win" id="win">
+      <div class="winbar"><i></i><i></i><i></i>
+        <div class="search"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#586374" stroke-width="2.6" stroke-linecap="round"><circle cx="10" cy="10" r="6.500"/><path d="M15 15l5 5"/></svg><span>Rue des Lilas</span></div>
+      </div>
+      <div class="winmap"><img id="mapImg" src="../assets/map.png" alt=""><div class="sel" id="sel"><div class="sz" id="selsz">0 × 0</div></div></div>
+    </div>
+    <div class="shot" id="shot"><img src="../assets/map.png" alt=""></div>
+    <div class="filechip" id="file1"><span class="ck"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.500" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.500l4.500 4.500L19 7.500"/></svg></span>capture.png importée</div>
+    <div class="ripple" id="rip1"></div>
+    <svg class="cursor" id="cur1" viewBox="0 0 46 46"><path d="M8 4v32l9-8 6 13 6-3-6-13h12z" fill="#16202E" stroke="#fff" stroke-width="3" stroke-linejoin="round"/></svg>
+  </section>
+
+  <!-- ============ 2. GÉNÉRATION ============ -->
+  <section class="scene" id="s2">
+    <h2 class="hl" id="h2" style="top:230px">
+      <span class="ln"><span class="in">L’IA la</span></span>
+      <span class="ln"><span class="in">redessine</span></span>
+      <span class="ln"><span class="in">en tapis.</span></span>
+    </h2>
+    <p class="sub" id="sub2" style="top:590px"><span class="ln"><span class="in" style="white-space:normal">Routes, parcs, rivières, maisons et arbres sont reconnus, puis redessinés.</span></span></p>
+    <div class="stats" id="stats2">
+      <div class="stat" id="st-r"><b id="n-r">0 %</b><span>de routes</span></div>
+      <div class="stat" id="st-h"><b id="n-h">0</b><span>maisons</span></div>
+      <div class="stat" id="st-t"><b id="n-t">0</b><span>arbres</span></div>
+    </div>
+    <div class="card" id="card2">
+      <img src="../assets/map.png" alt="">
+      <div class="lay" id="clsLay"><img src="../assets/classes.png" alt=""></div>
+      <div class="lay" id="baseLay"><img src="../assets/mat_base.png" alt=""></div>
+      <div class="mspace" id="mspace2"></div>
+      <img class="lay" id="finalLay" src="../assets/mat.png" alt="" style="opacity:0">
+      <div class="mspace" id="cars2"></div>
+      <svg id="cardRing" width="940" height="627" style="position:absolute;left:0;top:0;display:none"></svg>
+      <div class="scan" id="scan"></div>
+    </div>
+    <div class="callwrap" id="callwrap"></div>
+    <div class="ready" id="ready2"><span class="ck"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16202E" stroke-width="3.500" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.500l4.500 4.500L19 7.500"/></svg></span>Tapis prêt en quelques secondes</div>
+  </section>
+
+  <!-- ============ 3. VUE 3D ============ -->
+  <section class="scene" id="s3">
+    <div class="cam" id="cam">
+      <div class="world" id="world">
+        <div class="floor" id="floor"></div>
+        <div class="shadow" id="shadow"></div>
+        <div class="matbox" id="matbox">
+          <div class="face top"><img src="../assets/mat.png" alt=""><div class="carlayer" id="cars3"></div></div>
+          <div class="face sf"></div><div class="face sb"></div><div class="face sr"></div><div class="face sl"></div>
+        </div>
+      </div>
+    </div>
+    <div id="haze"></div>
+    <h2 class="hl" id="h3" style="top:230px">
+      <span class="ln"><span class="in">Admirez-le</span></span>
+      <span class="ln"><span class="in">en 3D.</span></span>
+    </h2>
+    <p class="sub" id="sub3" style="top:470px; width:600px"><span class="ln"><span class="in" style="white-space:normal">Faites-le tourner, zoomez, regardez rouler les voitures.</span></span></p>
+    <div class="modes" id="modes"><span class="mode" id="m1">Perspective</span><span class="mode" id="m2">Dessus</span><span class="mode" id="m3">Vue enfant</span></div>
+  </section>
+
+  <!-- ============ 4. COMMANDE ET LIVRAISON ============ -->
+  <section class="scene" id="s4">
+    <h2 class="hl" id="h4a" style="top:250px"><span class="ln"><span class="in">Choisissez</span></span><span class="ln"><span class="in">la taille.</span></span></h2>
+    <p class="sub" id="sub4a" style="top:520px"><span class="ln"><span class="in" style="white-space:normal">Du 120 × 80 au 180 × 120 cm, en tissu doux ou en mousse lavable.</span></span></p>
+    <h2 class="hl" id="h4b" style="top:250px"><span class="ln"><span class="in">Payez</span></span><span class="ln"><span class="in">en ligne.</span></span></h2>
+    <p class="sub" id="sub4b" style="top:520px"><span class="ln"><span class="in" style="white-space:normal">Une carte, et c’est commandé.</span></span></p>
+    <h2 class="hl" id="h4c" style="top:200px"><span class="ln"><span class="in">Recevez-le</span></span><span class="ln"><span class="in">chez vous.</span></span></h2>
+    <p class="sub" id="sub4c" style="top:470px"><span class="ln"><span class="in" style="white-space:normal">Livraison offerte, en 5 à 7 jours.</span></span></p>
+
+    <div class="sz" id="sz1" style="left:880px"><div class="pv"><img src="../assets/mat.png" width="160" height="107" alt=""></div><div class="lab">120 × 80 cm</div><div class="pr">49 €</div></div>
+    <div class="sz" id="sz2" style="left:1196px"><div class="tg">Le plus choisi</div><div class="pv"><img src="../assets/mat.png" width="200" height="133" alt=""></div><div class="lab">150 × 100 cm</div><div class="pr">69 €</div><div class="selring" id="selring"></div></div>
+    <div class="sz" id="sz3" style="left:1512px"><div class="pv"><img src="../assets/mat.png" width="240" height="160" alt=""></div><div class="lab">180 × 120 cm</div><div class="pr">89 €</div></div>
+    <div class="mt" id="mt1" style="left:880px"><span class="rd"><i id="rd1"></i></span>Tissu doux</div>
+    <div class="mt" id="mt2" style="left:1290px"><span class="rd"><i></i></span>Mousse lavable <small>+ 10 €</small></div>
+    <div class="tot" id="tot"><div class="l">Total<span class="free">Livraison offerte</span></div><div class="v" id="totv">0 €</div></div>
+
+    <div class="pay" id="pay">
+      <h3>Paiement</h3>
+      <div class="fld"><label>Nom complet</label><div class="bx"><span id="ty-name"></span><u></u></div></div>
+      <div class="fld"><label>Adresse e-mail</label><div class="bx"><span id="ty-mail"></span><u></u></div></div>
+      <div class="fld"><label>Carte bancaire</label><div class="bx"><span id="ty-card"></span><u></u></div></div>
+      <div class="btnpay" id="btnpay"><span class="spin" id="spin"></span><span id="paytxt">Payer 69 €</span></div>
+      <div class="okbox" id="okbox"><div class="big"><svg width="110" height="110" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.500l4.500 4.500L19 7.500"/></svg></div><h4>Paiement accepté</h4><p>Commande n° MR-48213</p></div>
+    </div>
+
+    <div class="walk" id="walk" style="top:770px;height:30px"></div>
+    <div class="road4" id="road4"><i></i></div>
+    <svg id="house" width="360" height="330" viewBox="0 0 360 330" style="left:1400px;top:445px">
+      <rect x="262" y="22" width="34" height="70" fill="#C23A2D" stroke="#16202E" stroke-width="4"/>
+      <path d="M-4 134L180 8l184 126z" fill="#E04A3A" stroke="#16202E" stroke-width="5" stroke-linejoin="round"/>
+      <rect x="28" y="128" width="304" height="196" fill="#F9DC94" stroke="#16202E" stroke-width="5"/>
+      <rect x="148" y="204" width="68" height="120" rx="6" fill="#2F72CC" stroke="#16202E" stroke-width="4"/><circle cx="204" cy="268" r="5" fill="#FFC83D"/>
+      <rect x="58" y="160" width="64" height="64" rx="6" fill="#CFE9FF" stroke="#16202E" stroke-width="4"/><path d="M90 160v64M58 192h64" stroke="#16202E" stroke-width="3"/>
+      <rect x="240" y="160" width="64" height="64" rx="6" fill="#CFE9FF" stroke="#16202E" stroke-width="4"/><path d="M272 160v64M240 192h64" stroke="#16202E" stroke-width="3"/>
+    </svg>
+    <svg id="tree4a" width="150" height="230" viewBox="0 0 150 230" style="position:absolute;left:1290px;top:560px"><rect x="64" y="130" width="22" height="100" fill="#8A5A2B"/><circle cx="75" cy="76" r="68" fill="#5DA62E" stroke="#16202E" stroke-width="5"/><circle cx="52" cy="58" r="16" fill="#7CC243"/></svg>
+    <svg id="tree4b" width="150" height="230" viewBox="0 0 150 230" style="position:absolute;left:1740px;top:590px"><rect x="64" y="130" width="22" height="100" fill="#8A5A2B"/><circle cx="75" cy="76" r="68" fill="#5DA62E" stroke="#16202E" stroke-width="5"/><circle cx="52" cy="58" r="16" fill="#7CC243"/></svg>
+    <svg id="van" width="300" height="150" viewBox="0 0 300 150">
+      <rect x="62" y="14" width="150" height="34" rx="17" fill="#7CC243" stroke="#16202E" stroke-width="4"/>
+      <ellipse cx="62" cy="31" rx="9" ry="17" fill="#5DA62E" stroke="#16202E" stroke-width="4"/><ellipse cx="62" cy="31" rx="3.500" ry="8" fill="#8A8E94"/>
+      <path d="M18 120V62c0-9 7-16 16-16h156c6 0 11 3 14 8l30 36c3 3 5 8 5 12v28z" fill="#fff" stroke="#16202E" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M212 56h12c4 0 7 2 9 5l22 28h-43z" fill="#CFE9FF" stroke="#16202E" stroke-width="4" stroke-linejoin="round"/>
+      <rect x="18" y="92" width="244" height="16" fill="#FFC83D"/>
+      <text x="40" y="82" font-family="Bricolage Grotesque" font-weight="800" font-size="30" fill="#16202E">Minirue</text>
+      <circle cx="74" cy="122" r="24" fill="#1D2430"/><circle cx="74" cy="122" r="10" fill="#CFD5DC"/>
+      <circle cx="222" cy="122" r="24" fill="#1D2430"/><circle cx="222" cy="122" r="10" fill="#CFD5DC"/>
+      <rect x="282" y="104" width="12" height="10" rx="3" fill="#FFE98A"/>
+    </svg>
+    <svg id="parcel" width="96" height="84" viewBox="0 0 96 84"><rect x="4" y="12" width="88" height="68" rx="6" fill="#D0A468" stroke="#16202E" stroke-width="4"/><rect x="38" y="12" width="20" height="68" fill="#EBD3A4"/><rect x="58" y="34" width="26" height="18" rx="3" fill="#fff" stroke="#16202E" stroke-width="2.500"/><path d="M63 40h16M63 46h10" stroke="#16202E" stroke-width="2.500"/></svg>
+    <div class="deliv" id="deliv"><span class="ck"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.500" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.500l4.500 4.500L19 7.500"/></svg></span>Colis livré</div>
+    <div class="ripple" id="rip4"></div>
+    <svg class="cursor" id="cur4" viewBox="0 0 46 46"><path d="M8 4v32l9-8 6 13 6-3-6-13h12z" fill="#16202E" stroke="#fff" stroke-width="3" stroke-linejoin="round"/></svg>
+  </section>
+
+  <!-- ============ 5. FINAL ============ -->
+  <section class="scene" id="s5">
+    <div class="tilt" id="tilt5"><div class="tiltIn"><img src="../assets/mat.png" alt=""></div></div>
+    <div class="roadH" style="top:860px"><i></i></div>
+    <div id="cars5"></div>
+    <h1 class="hl xl" id="h5" style="top:176px; font-size:120px">
+      <span class="ln"><span class="in">Votre rue</span></span>
+      <span class="ln"><span class="in">devient un</span></span>
+      <span class="ln"><span class="in">terrain</span></span>
+      <span class="ln"><span class="in">de jeu.</span></span>
+    </h1>
+    <div class="cta" id="cta">Créer mon tapis<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.600" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    <div class="price" id="price5">Dès 49 €</div>
+    <div class="ripple" id="rip5"></div>
+    <svg class="cursor" id="cur5" viewBox="0 0 46 46"><path d="M8 4v32l9-8 6 13 6-3-6-13h12z" fill="#16202E" stroke="#fff" stroke-width="3" stroke-linejoin="round"/></svg>
+    <div class="lock" id="lock5"><span class="mark"></span><span class="word">Minirue</span></div>
+  </section>
+
+  <div id="steps">
+    <div class="pill"><b>1</b>Capturez</div>
+    <div class="pill"><b>2</b>Générez</div>
+    <div class="pill"><b>3</b>Visualisez</div>
+    <div class="pill"><b>4</b>Commandez</div>
+  </div>
+  <svg id="ring" width="1920" height="1080"></svg>
+  <div id="flash"></div>
+</div>
+
+<script src="../assets/vendor/gsap.min.js"></script>
+<script src="../assets/layout.js"></script>
+<script src="helpers.js"></script>
+<script src="scenes-a.js"></script>
+<script src="scenes-b.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
